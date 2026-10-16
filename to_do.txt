@@ -1,0 +1,3 @@
+create group class
+create convo class
+dont forget during update price should be kept
