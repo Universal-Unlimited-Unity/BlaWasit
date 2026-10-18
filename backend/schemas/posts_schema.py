@@ -1,10 +1,8 @@
-
 from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 from enum import Enum
 from uuid import UUID, uuid4
-
-from pydantic import BaseModel, Field, ConfigDict, EmailStr
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class PropertyType(str, Enum):
@@ -24,7 +22,7 @@ class Post(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True)
     user_id: UUID
     post_id: UUID = Field(default_factory=uuid4)
-    imags_url: str | None = None
+    imags_url: str
     title: str
     legal_papers_url_PDF: str | None = None
     size_m2: float
@@ -33,7 +31,7 @@ class Post(BaseModel):
     boys_only: bool = False
     girls_only: bool = False
     families_only: bool = False
-    accpet_smokers: bool = False
+    accept_smokers: bool = False
     wifi: bool = False
     ac: bool = False
     boiler: bool = False
@@ -59,14 +57,3 @@ class Post(BaseModel):
     expires_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc) + timedelta(days=7))
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-
-class User(BaseModel):
-    user_id: UUID = Field(default_factory=uuid4)
-    legal_papers_url_PDF: str | None = None
-    first_name: str
-    last_name: str
-    email: EmailStr
-    verified: bool = False
-    image_url: str | None = None
-    bio: str | None = None
-    
