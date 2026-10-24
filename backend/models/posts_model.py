@@ -4,10 +4,12 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import UUID
 from DB_CONFIG import metadata
+from .users_model import users_table
+
 posts_table = Table(
     "posts",
     metadata,
-    Column("post_id", UUID(as_uuid=True), primary_key=True, index=True),
+    Column("post_id", UUID(as_uuid=True), primary_key=True),
     Column("user_id", UUID(as_uuid=True), ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False, index=True),
     Column("imags_url", String, nullable=False),
     Column("title", String, nullable=False),
@@ -44,5 +46,16 @@ posts_table = Table(
     Column("expires_at", DateTime(timezone=True),  nullable=False),
     Column("created_at", DateTime(timezone=True), nullable=False),
     Column("updated_at", DateTime(timezone=True), nullable=False),
+    Column("rejected_at", DateTime(timezone=True), nullable=True),
+    Column("rejection_reason", String, nullable=True),
     Index("post_id_user_id_idx", "user_id", "post_id")
+)
+
+post_price_history_table = Table(
+    "post_price_history",
+    metadata,
+    Column("post_id", UUID(as_uuid=True), ForeignKey("posts.post_id", ondelete="CASCADE"), primary_key=True),
+    Column("price", Numeric(precision=10, scale=2), nullable=False),
+    Column("created_at", DateTime(timezone=True), nullable=False),
+    Index("post_time_idx", "created_at")
 )

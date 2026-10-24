@@ -17,13 +17,16 @@ users_table = Table(
     Column("bio", String, nullable=True),
     Column("created_at", DateTime(timezone=True), nullable=False),
     Column("updated_at", DateTime(timezone=True), nullable=True),
+    Column("add_to_group", Boolean, nullable=False),
+    Column("rejected_at", DateTime(timezone=True), nullable=True),
+    Column("rejection_reason", String, nullable=True),
 )
 
 
 groups_table = Table(
     "groups",
     metadata,
-    Column("group_id", UUID(as_uuid=True), primary_key=True, index=True),
+    Column("group_id", UUID(as_uuid=True), primary_key=True),
     Column("admin_id", UUID(as_uuid=True), ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False, index=True),
     Index("grp_id_admin_id", "group_id", "admin_id")
 )
@@ -32,7 +35,7 @@ groups_table = Table(
 group_members_table = Table(
     "group_members",
     metadata,
-    Column("group_id", UUID(as_uuid=True), ForeignKey("groups.group_id", ondelete="CASCADE"), primary_key=True, Index=True),
-    Column("user_id", UUID(as_uuid=True), ForeignKey("users.user_id", ondelete="CASCADE"), primary_key=True, Index=True),
+    Column("group_id", UUID(as_uuid=True), ForeignKey("groups.group_id", ondelete="CASCADE"), primary_key=True),
+    Column("user_id", UUID(as_uuid=True), ForeignKey("users.user_id", ondelete="CASCADE"), primary_key=True),
     Index("grp_id_user_id", "group_id", "user_id")
 )
