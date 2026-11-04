@@ -23,3 +23,5 @@ class Settings(BaseSettings):
             port = self.POSTGRES_PORT
             self.sqlalchemy_url = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}"
         return self
+
+settings = Settings()

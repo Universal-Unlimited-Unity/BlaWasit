@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from uuid import UUID
 class Message(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True)
+    message_id: UUID = Field(description="The unique identifier of the message")
     sender_id: UUID = Field(description="The unique identifier of the user who sent the message")
     recipent_id: UUID = Field(description="The unique identifier of the user who is the recipient of the message")
     post_id: UUID = Field(description="The unique identifier of the post to which the message belongs")
