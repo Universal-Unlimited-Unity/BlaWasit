@@ -21,11 +21,14 @@ class User(BaseModel):
     rejection_reason: str | None = Field(default=None, description="The reason for rejection of the user's legal identification, if applicable")
     verification_status: VerificationStatus = Field(default=VerificationStatus.pending, description="The current verification status of the user's legal identification, can be 'pending', 'rejected', or 'accepted'")
     created_at: datetime | None = Field(default_factory=lambda: datetime.now(timezone.utc), description="Timestamp of when the user was created")
-    updated_at: datetime | None = Field(default=None, description="Timestamp of when the user was last updated")
+    updated_at: datetime | None = Field(default=datetime.now(timezone.utc), description="Timestamp of when the user was last updated")
     image_url: str | None = Field(default=None, description="URL to the user's profile image, if provided")
     bio: str | None = Field(default=None, description="A brief biography of the user, if provided")
     add_to_group: bool | None = Field(default=False, description="Indicates whether the user can be added to a group")
 
+class User_password_required(User):
+    password: str = Field(description="The user's password, must be a valid password format")
+    
 class Group(BaseModel):
     group_id: UUID = Field(default_factory=uuid4, description="Auto generated unique identifier for the group")
     admin_id: UUID = Field(description="The unique identifier of the user who is the admin of the group")
