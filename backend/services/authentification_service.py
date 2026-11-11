@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from uuid import uuid4
 from sqlalchemy import insert, select, update
+from sqlalchemy.exc import IntegrityError
 from DB_CONFIG import engine
 from google.oauth2 import id_token
 from google.auth.transport import requests
@@ -88,15 +89,15 @@ def google_auth(token_body: GoogleAuthPayload):
         raise HTTPException(status_code=400, detail="Invalid token")
 
 def normal_signup(user: User_password_required):
-    existing_user = get_user_by_email(user.email)
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
     if not pwd_schema.validate(user.password):
         raise HTTPException(status_code=400, detail="Password does not meet complexity requirements")
     user.password = hash_password(user.password)
     with engine.begin() as conn:
-        query = insert(users_table).values(user.model_dump())
-        conn.execute(query)
+        try:
+            query = insert(users_table).values(user.model_dump())
+            conn.execute(query)
+        except IntegrityError:
+            raise HTTPException(status_code=400, detail="Email already registered")
     return generate_token(user.email)
 
 def normal_login(auth_payload: NormalAuthPayload):
